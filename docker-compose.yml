@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+
+  proxy:
+    image: trialstreamer-nginx-aws
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - robotreviewer_network
+      - trialstreamer-demo_network
+
+networks:
+  robotreviewer_network:
+    external: true
+    name: robotreviewer_default
+  trialstreamer-demo_network:
+    external: true
+    name: trialstreamer-demo_default

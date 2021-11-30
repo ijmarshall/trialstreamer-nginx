@@ -1,4 +1,4 @@
-# Trialstreamer-AWS
+# Trialstreamer-Nginx
 Documentation for deploying production services of Trialstreamer project on a AWS EC2 machine.
 
 After cloning this repository, follow these steps in order to set up Robotreviewer and Trialstreamer services properly for
@@ -8,7 +8,15 @@ the production environment.
 
 ### Cloning repositories 
 
-1. Clone the repositories robotreviewer, trialstreamer and trialstreamer-demo inside the  `~/prod` folder. 
+1. Clone the repositories robotreviewer, trialstreamer, trialstreamer-demo and trialstreamer-aws
+   inside the  `~/prod` folder. 
+
+   ```
+   git clone git@github.com:ijmarshall/robotreviewer.git
+   git clone git@github.com:ijmarshall/trialstreamer.git
+   git clone git@github.com:ijmarshall/trialstreamer-demo.git
+   git clone git@github.com:ijmarshall/trialstreamer-nginx.git
+   ```
 
 2. Update the submodule ictrp-rerieval repository at `~/prod/trialstreamer/trialstreamer/ictrp-retrieval` by running: 
     ```   
@@ -16,8 +24,11 @@ the production environment.
     git submodule update 
     ```
 
-3. Update `servername` domains and the proper SSL paths at `trialstreamer-aws/nginx.conf`.
+3. Update `servername` domains and the proper SSL paths at `trialstreamer-nginx/nginx.conf`.
 
+### GPU support
+
+1. Install Cuda drivers & `nvidia-container-runtime` following instructions from https://docs.docker.com/compose/gpu-support/  
 
 ### Services configurations
 
@@ -49,11 +60,9 @@ the production environment.
  
 #### Robotreviewer 
 
-1. Install Cuda drivers & `nvidia-container-runtime` following instructions from https://docs.docker.com/compose/gpu-support/  
+1. Edit `config.json` and `.env` files. 
 
-2. Edit `config.json` and `.env` files. 
-
-3. API Key used by Trialstreamer must be set in the JSON file.
+2. API Key used by Trialstreamer must be set in the `config.json` file.
  
 
 ## Running services 
@@ -62,7 +71,12 @@ the production environment.
 
 At `~/prod/robotreviewer/` run: 
 ```
-docker-compose –f docker-compose.gpu.yml up –-build -d 
+docker-compose -f docker-compose.gpu.yml build
+docker-compose -f docker-compose.gpu.yml up -d
+```
+To stop, run: 
+```
+docker-compose -f dodcker-compose.gpu.yml down --remove-orphans 
 ```
 
 #### Trialstreamer 
@@ -70,7 +84,12 @@ docker-compose –f docker-compose.gpu.yml up –-build -d
 After the network `robotreviewer_default` is available, at `~/prod/trialstreamer/` run: 
 
 ```
-docker-compose up -–build –d 
+docker-compose build 
+docker-compose up –d 
+```
+To stop, run: 
+```
+docker-compose down --remove-orphans 
 ```
 
 #### Trialstreamer-Demo 
@@ -78,49 +97,34 @@ docker-compose up -–build –d
 At `~/prod/trialstreamer-demo/` run: 
 
 ```
-docker-compose up -–build –d 
+docker-compose build
+docker-compose up –d 
+```
+To stop, run: 
+```
+docker-compose down --remove-orphans 
 ```
  
 #### Production Proxy
 
 After the networks `robotreviewer_default` and `trialstreamer-demo_default` are available, 
-at `~/prod/trialstreamer-aws/` run:
+at `~/prod/trialstreamer-nginx/` run:
 
 ```
-docker-compose up –-build -d 
+docker-compose build
+docker-compose up –d 
 ```
 
-Run `docker ps` to check the services status.  
+To stop, run: 
+```
+docker-compose down --remove-orphans 
+```
+
+
+#### Check status & logs 
+
+Run `docker ps` to check the services status.
+
+Run `docker stats` to check the memory and CPU usage of all services.
 
 The logs of any container can be followed running `docker logs <container_name> -f` 
-
- 
-## Stopping services 
-
-#### Robotreviewer 
-
-At `~/prod/robotreviewer/` run: 
-
-```
-docker-compose –f docker-compose.gpu.yml down --remove-orphans 
-```
-
-#### Trialstreamer 
-
-At `~/prod/trialstreamer/` run: 
-```
-docker-compose down --remove-orphans 
-```
-
-#### Trialstreamer-Demo 
-
-At `~/prod/trialstreamer-demo/` run: 
-```
-docker-compose down --remove-orphans 
-```
-
-#### Production Proxy
-At `~/prod/trialstreamer-aws/` run: 
-```
-docker-compose down --remove-orphans 
-```

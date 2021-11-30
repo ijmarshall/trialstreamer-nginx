@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   proxy:
-    image: trialstreamer-nginx-aws
+    image: trialstreamer-nginx
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,6 +14,7 @@ services:
     networks:
       - robotreviewer_network
       - trialstreamer-demo_network
+      - trialstreamer-api_network
 
 networks:
   robotreviewer_network:
@@ -22,3 +23,6 @@ networks:
   trialstreamer-demo_network:
     external: true
     name: trialstreamer-demo_default
+  trialstreamer-api_network:
+    external: true
+    name: trialstreamer_default

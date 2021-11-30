@@ -28,7 +28,10 @@ the production environment.
 
 ### GPU support
 
-1. Install Cuda drivers & `nvidia-container-runtime` following instructions from https://docs.docker.com/compose/gpu-support/  
+Install Cuda drivers & `nvidia-container-runtime` following instructions from https://docs.docker.com/compose/gpu-support/  
+
+A reboot may be necessary after installing the drivers to be able to use the GPU resources properly. 
+To check that the drivers were successfully installed, you should be able to run `nvidia-smi` command.
 
 ### Services configurations
 

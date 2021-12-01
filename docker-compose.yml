@@ -2,10 +2,10 @@ version: "3.9"
 
 services:
 
-  proxy:
-    image: trialstreamer-nginx
+  nginx:
+    image: proxy
     build:
-      context: .
+      context: ./nginx
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
@@ -15,6 +15,17 @@ services:
       - robotreviewer_network
       - trialstreamer-demo_network
       - trialstreamer-api_network
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot
+    build: ./certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: print-version
 
 networks:
   robotreviewer_network:

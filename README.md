@@ -24,8 +24,6 @@ the production environment.
     git submodule update 
     ```
 
-3. Update `servername` domains and the proper SSL paths at `trialstreamer-nginx/nginx.conf`.
-
 ### GPU support
 
 Install Cuda drivers & `nvidia-container-runtime` following instructions from https://docs.docker.com/compose/gpu-support/  
@@ -108,14 +106,26 @@ To stop, run:
 docker-compose down --remove-orphans 
 ```
  
-#### Production Proxy
+#### Production Reverse Proxy
 
-After the networks `robotreviewer_default` and `trialstreamer-demo_default` are available, 
+1. Perform any desired changes in the Nginx configuration at `trialstreamer-nginx/nginx.conf`,
+   for example, you may want to change:
+   - `client_max_body_size 512M;` for the `robotreviewer.ieai.aws.northeastern.edu` server, that allows for the PDF uploads up to a 512M body size on the request.
+
+2. After the Docker networks `robotreviewer_default`, `trialstreamer_default` and `trialstreamer-demo_default` are available, 
 at `~/prod/trialstreamer-nginx/` run:
 
 ```
-docker-compose build
-docker-compose up –d 
+docker-compose build 
+```
+* **NOTE:** At this point if you haven't already generated the SSL certificates, you will have to:
+   1. Create initial certificates `docker-compose run --rm certbot init`
+   2. Start the nginx server: `docker-compose up -d`
+   3. Generate the initial ieai.aws.northeastern.edu with `docker-compose run --rm certbot create-cert`
+
+3. Run the ceritificate renewal process using **certbot** image:
+```
+docker-compose run --rm certbot cert-renew
 ```
 
 To stop, run: 

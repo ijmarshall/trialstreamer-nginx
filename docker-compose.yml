@@ -16,16 +16,20 @@ services:
       - trialstreamer-demo_network
       - trialstreamer-api_network
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
+      - wwwroot:/var/www/certbot
 
   certbot:
     image: certbot
     build: ./certbot
     volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      - letsencrypt:/etc/letsencrypt
+      - wwwroot:/var/www/certbot
     command: print-version
+
+volumes:
+  letsencrypt:
+  wwwroot:
 
 networks:
   robotreviewer_network:

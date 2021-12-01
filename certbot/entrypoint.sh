@@ -36,7 +36,7 @@ remove-cert)
     ;;
 
 create-cert)
-    echo "Generating real certificates"
+    echo "Generating SSL certificates"
     certbot certonly --webroot -w /var/www/certbot \
     --email $email \
     -d ieai.aws.northeastern.edu \
@@ -44,8 +44,11 @@ create-cert)
     --agree-tos \
     --force-renewal
     ;;
-
-cert-renew)
+renew)
+    echo "Renewing SSL certificates"
+    certbot renew
+    ;;
+renew-loop)
     /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'
     ;;
 *)

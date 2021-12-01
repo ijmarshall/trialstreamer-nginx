@@ -121,12 +121,18 @@ docker-compose build
 * **NOTE:** At this point if you haven't already generated the SSL certificates, you will have to:
    1. Create initial certificates `docker-compose run --rm certbot init`
    2. Start the nginx server: `docker-compose up -d`
-   3. Generate the initial ieai.aws.northeastern.edu with `docker-compose run --rm certbot create-cert`
+   3. Generate the SSL certificates for ieai.aws.northeastern.edu with `docker-compose run --rm certbot create-cert`
 
-3. Run the ceritificate renewal process using **certbot** image:
 ```
-docker-compose run --rm certbot cert-renew
+docker-compose up -d
 ```
+
+
+3. To renew the certificates using **certbot** image run:
+```
+docker-compose run --rm certbot renew
+```
+This command can be setup as a cronjob in order to be automated.
 
 To stop, run: 
 ```

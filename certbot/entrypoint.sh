@@ -19,23 +19,22 @@ print-version)
     ;;
 
 init)
-    if [ ! -e "/etc/letsencrypt/conf/options-ssl-nginx.conf" ] || [ ! -e "/etc/letsencrypt/ssl-dhparams.pem" ]; then
+    if [ ! -e "/etc/letsencrypt/options-ssl-nginx.conf" ] || [ ! -e "/etc/letsencrypt/ssl-dhparams.pem" ]; then
       echo "### Downloading recommended TLS parameters ..."
       curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "/etc/letsencrypt/options-ssl-nginx.conf"
       curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "/etc/letsencrypt/ssl-dhparams.pem"
       echo
     fi
     mkdir -p /etc/letsencrypt/live/ieai.aws.northeastern.edu
-    if [ ! -e "/etc/letsencrypt/ieai.aws.northeastern.edu/privkey.pem" ] || \
-       [ ! -e "/etc/letsencrypt/ieai.aws.northeastern.edu/fullchain.pem" ] ; then
+    if [ ! -e "/etc/letsencrypt/live/ieai.aws.northeastern.edu/privkey.pem" ] || \
+       [ ! -e "/etc/letsencrypt/live/ieai.aws.northeastern.edu/fullchain.pem" ] ; then
       echo "Generating dummy certificates"
       openssl req -x509 -nodes -newkey rsa:4096 -days 1 \
       -keyout '/etc/letsencrypt/live/ieai.aws.northeastern.edu/privkey.pem' \
       -out '/etc/letsencrypt/live/ieai.aws.northeastern.edu/fullchain.pem' \
       -subj '/CN=ieai.aws.northeastern.edu'
     else
-      echo "Initial certificates already are created. Please remove them with remove-cert command to
-       re-generate them."
+      echo "Initial certificates already are created. Please remove them with remove-cert command to re-generate them."
     fi
     ;;
 

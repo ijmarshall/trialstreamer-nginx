@@ -27,7 +27,7 @@ services:
       - wwwroot:/var/www/certbot
     environment:
       - CERTBOT_STAGING=0
-      - CERTBOT_EMAIL=""
+      - CERTBOT_EMAIL=
     command: print-version
 
 volumes:

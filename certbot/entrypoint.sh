@@ -21,27 +21,27 @@ case "$OPTS" in
         curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "/etc/letsencrypt/ssl-dhparams.pem"
         echo
       fi
-      mkdir -p /etc/letsencrypt/live/ieai.aws.northeastern.edu
-      if [ ! -e "/etc/letsencrypt/live/ieai.aws.northeastern.edu/privkey.pem" ] || \
-         [ ! -e "/etc/letsencrypt/live/ieai.aws.northeastern.edu/fullchain.pem" ] ; then
+      mkdir -p /etc/letsencrypt/live/robotreviewer.net
+      if [ ! -e "/etc/letsencrypt/live/robotreviewer.net/privkey.pem" ] || \
+         [ ! -e "/etc/letsencrypt/live/robotreviewer.net/fullchain.pem" ] ; then
         echo "Generating dummy certificates"
         openssl req -x509 -nodes -newkey rsa:4096 -days 1 \
-        -keyout '/etc/letsencrypt/live/ieai.aws.northeastern.edu/privkey.pem' \
-        -out '/etc/letsencrypt/live/ieai.aws.northeastern.edu/fullchain.pem' \
-        -subj '/CN=ieai.aws.northeastern.edu'
+        -keyout '/etc/letsencrypt/live/robotreviewer.net/privkey.pem' \
+        -out '/etc/letsencrypt/live/robotreviewer.net/fullchain.pem' \
+        -subj '/CN=robotreviewer.net'
       else
         echo "Initial certificates already are created. First remove them with 'remove-cert' command to be able to re-generate them."
       fi
       ;;
 
   remove-cert)
-      echo "Deleting dummy certificates for ieai.aws.northeastern.edu"
-      if [ -d "/etc/letsencrypt/live/ieai.aws.northeastern.edu/" ] || \
-         [ -d "/etc/letsencrypt/archive/ieai.aws.northeastern.edu/" ] || \
-         [ -d "/etc/letsencrypt/renewal/ieai.aws.northeastern.edu/" ] ; then
-        rm -Rf /etc/letsencrypt/live/ieai.aws.northeastern.edu && \
-        rm -Rf /etc/letsencrypt/archive/ieai.aws.northeastern.edu && \
-        rm -Rf /etc/letsencrypt/renewal/ieai.aws.northeastern.edu.conf
+      echo "Deleting dummy certificates for robotreviewer.net"
+      if [ -d "/etc/letsencrypt/live/robotreviewer.net/" ] || \
+         [ -d "/etc/letsencrypt/archive/robotreviewer.net/" ] || \
+         [ -d "/etc/letsencrypt/renewal/robotreviewer.net/" ] ; then
+        rm -Rf /etc/letsencrypt/live/robotreviewer.net && \
+        rm -Rf /etc/letsencrypt/archive/robotreviewer.net && \
+        rm -Rf /etc/letsencrypt/renewal/robotreviewer.net.conf
         echo "Done."
       else
         echo "Certificates folder does not exist. Aborting..."
@@ -53,8 +53,8 @@ case "$OPTS" in
       if [ "$CERTBOT_STAGING" != "0" ]; then staging_arg="--staging"; fi
       certbot certonly --webroot -w /var/www/certbot \
       --email "$CERTBOT_EMAIL" \
-      -d robotreviewer.ieai.aws.northeastern.edu \
-      -d trialstreamer.ieai.aws.northeastern.edu \
+      -d demo.robotreviewer.net \
+      -d trialstreamer.robotreviewer.net \
       --rsa-key-size 4096 \
       --agree-tos \
       --force-renewal \

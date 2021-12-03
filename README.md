@@ -72,6 +72,7 @@ To check that the drivers were successfully installed, you should be able to run
     volumes: 
         - /data/pubmed-data:/var/lib/deploy/pubmed-data 
     ```
+5. Remove the exposed ports of `api`. In production these services are exposed by Nginx.
 
 #### Trialstreamer-Demo 
 
@@ -87,7 +88,8 @@ To check that the drivers were successfully installed, you should be able to run
     **NOTE:** If running with GPU, it is recommended to set `TF_FORCE_GPU_ALLOW_GROWTH='true'`.
 
 2. API Key used by Trialstreamer must be set in the `config.json` file.
- 
+
+3. Remove the exposed ports of `web` and `api`. In production these services are exposed by Nginx.
 
 ## Running services 
 
@@ -100,7 +102,7 @@ docker-compose -f docker-compose.gpu.yml up -d
 ```
 To stop, run: 
 ```
-docker-compose -f dodcker-compose.gpu.yml down --remove-orphans 
+docker-compose -f docker-compose.gpu.yml down --remove-orphans 
 ```
 
 #### Trialstreamer 
@@ -133,7 +135,7 @@ docker-compose down --remove-orphans
 
 1. Perform any desired changes in the Nginx configuration at `trialstreamer-nginx/nginx.conf`,
    for example, you may want to change:
-   - `client_max_body_size 512M;` for the `robotreviewer.ieai.aws.northeastern.edu` server, that allows for the PDF uploads up to a 512M body size on the request.
+   - `client_max_body_size 512M;` for the `demo.robotreviewer.net` server, that allows for the PDF uploads up to a 512M body size on the request.
 
 2. After the Docker networks `robotreviewer_default`, `trialstreamer_default` and `trialstreamer-demo_default` are available, 
 at `~/prod/trialstreamer-nginx/` run:
@@ -144,7 +146,7 @@ docker-compose build
 * **NOTE:** At this point if you haven't already generated the SSL certificates, you will have to:
    1. Create initial certificates `docker-compose run --rm certbot init`
    2. Start the nginx server: `docker-compose up -d`
-   3. Generate the SSL certificates for ieai.aws.northeastern.edu with `docker-compose run --rm certbot create-cert`
+   3. Generate the SSL certificates for robotreviewer.net with `docker-compose run --rm certbot create-cert`
 
 ```
 docker-compose up -d

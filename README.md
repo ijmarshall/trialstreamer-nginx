@@ -157,11 +157,16 @@ docker-compose up -d
 ```
 docker-compose run --rm certbot renew
 ```
-This command can be setup as a cronjob in order to be automated.
+This command could be setup to be run in a crontab for certificate renewal automatization.
 
 To stop, run: 
 ```
 docker-compose down --remove-orphans 
+```
+
+To restart only the Nginx service, run:
+```
+docker-compose restart nginx
 ```
 
 
@@ -171,4 +176,4 @@ Run `docker ps` to check the services status.
 
 Run `docker stats` to check the memory and CPU usage of all services.
 
-The logs of any container can be followed running `docker logs <container_name> -f` 
+The logs of any container can be followed running `docker logs  -f -t <container_name/container_id>`

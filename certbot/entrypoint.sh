@@ -58,6 +58,7 @@ case "$OPTS" in
       --rsa-key-size 4096 \
       --agree-tos \
       --force-renewal \
+      --non-interactive \
       --preferred-challenges http \
       $staging_arg
       ;;

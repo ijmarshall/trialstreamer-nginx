@@ -50,17 +50,24 @@ case "$OPTS" in
   create-cert)
       echo "Generating SSL certificates"
       if [ "$CERTBOT_EMAIL" = "" ]; then echo "Error: missing variable CERTBOT_EMAIL" && exit 1; fi
-      if [ "$CERTBOT_STAGING" != "0" ]; then staging_arg="--staging"; fi
+      echo "Generating demo.ieai.robotreviewer.net certificate." 
       certbot certonly --webroot -w /var/www/certbot \
       --email "$CERTBOT_EMAIL" \
-      -d demo.robotreviewer.net \
-      -d trialstreamer.robotreviewer.net \
+      -d demo.ieai.robotreviewer.net \
       --rsa-key-size 4096 \
       --agree-tos \
       --force-renewal \
       --non-interactive \
-      --preferred-challenges http \
-      $staging_arg
+      --preferred-challenges http
+      echo "Generating trialstreamer.ieai.robotreviewer.net certificate."
+      certbot certonly --webroot -w /var/www/certbot \
+      --email "$CERTBOT_EMAIL" \
+      -d trialstreamer.ieai.robotreviewer.net \
+      --rsa-key-size 4096 \
+      --agree-tos \
+      --force-renewal \
+      --non-interactive \
+      --preferred-challenges http
       ;;
 
   renew)

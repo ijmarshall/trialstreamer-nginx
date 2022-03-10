@@ -26,7 +26,6 @@ services:
       - letsencrypt:/etc/letsencrypt
       - wwwroot:/var/www/certbot
     environment:
-      - CERTBOT_STAGING=0
       - CERTBOT_EMAIL=
     command: print-version
 

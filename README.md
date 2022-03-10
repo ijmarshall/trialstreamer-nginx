@@ -9,10 +9,10 @@ the production environment.
 ### Cloning repositories 
 
 1. Clone the repositories **robotreviewer**, **trialstreamer**, **trialstreamer-demo** and **trialstreamer-nginx**
-   inside a `~/prod` folder. 
+   inside a `/data/prod` folder. 
 
    ```
-   mkdir -p ~/prod
+   mkdir -p /data/prod
    cd prod
    git clone git@github.com:ijmarshall/robotreviewer.git
    git clone git@github.com:ijmarshall/trialstreamer.git
@@ -20,7 +20,7 @@ the production environment.
    git clone git@github.com:ijmarshall/trialstreamer-nginx.git
    ```
 
-2. Update the submodule **ictrp-rerieval** repository at `~/prod/trialstreamer/trialstreamer/ictrp-retrieval` by running: 
+2. Update the submodule **ictrp-rerieval** repository at `/data/prod/trialstreamer/trialstreamer/ictrp-retrieval` by running: 
     ```   
     git submodule init  
     git submodule update 
@@ -72,7 +72,6 @@ To check that the drivers were successfully installed, you should be able to run
     volumes: 
         - /data/pubmed-data:/var/lib/deploy/pubmed-data 
     ```
-5. Remove the exposed ports of `api`. In production these services are exposed by Nginx.
 
 #### Trialstreamer-Demo 
 
@@ -95,7 +94,7 @@ To check that the drivers were successfully installed, you should be able to run
 
 #### Robotreviewer 
 
-At `~/prod/robotreviewer/` run: 
+At `/data/prod/robotreviewer/` run: 
 ```
 docker-compose -f docker-compose.gpu.yml build
 docker-compose -f docker-compose.gpu.yml up -d
@@ -107,7 +106,7 @@ docker-compose -f docker-compose.gpu.yml down --remove-orphans
 
 #### Trialstreamer 
 
-After the network `robotreviewer_default` is available, at `~/prod/trialstreamer/` run: 
+After the network `robotreviewer_default` is available, at `/data/prod/trialstreamer/` run: 
 
 ```
 docker-compose build 
@@ -120,7 +119,7 @@ docker-compose down --remove-orphans
 
 #### Trialstreamer-Demo 
 
-At `~/prod/trialstreamer-demo/` run: 
+At `/data/prod/trialstreamer-demo/` run: 
 
 ```
 docker-compose build
@@ -133,12 +132,12 @@ docker-compose down --remove-orphans
  
 #### Production Reverse Proxy
 
-1. Perform any desired changes in the Nginx configuration at `trialstreamer-nginx/nginx.conf`,
+1. Perform any desired changes in the Nginx configuration at `trialstreamer-nginx/nignx/conf/nginx.conf`,
    for example, you may want to change:
    - `client_max_body_size 512M;` for the `demo.robotreviewer.net` server, that allows for the PDF uploads up to a 512M body size on the request.
 
 2. After the Docker networks `robotreviewer_default`, `trialstreamer_default` and `trialstreamer-demo_default` are available, 
-at `~/prod/trialstreamer-nginx/` run:
+at `/data/prod/trialstreamer-nginx/` run:
 
 ```
 docker-compose build 
@@ -147,7 +146,9 @@ docker-compose build
    1. Create initial certificates `docker-compose run --rm certbot init`
    2. Start the nginx server: `docker-compose up -d`
    3. Generate the SSL certificates for robotreviewer.net with `docker-compose run --rm certbot create-cert`
-
+   4. You can check the existing certificates in the volume by accessing the path shown when running `docker volume inspect trialstreamer-nginx_letsencrypt`
+   5. Update the paths used by the `ssl_certificate` and `ssl_certificate_key` fields for each rule at `nginx/conf/nginx.conf` if necessary.
+    
 ```
 docker-compose up -d
 ```

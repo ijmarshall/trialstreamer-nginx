@@ -6,25 +6,6 @@ the production environment.
 
 ## Settings 
 
-### Cloning repositories 
-
-1. Clone the repositories **robotreviewer**, **trialstreamer**, **trialstreamer-demo** and **trialstreamer-nginx**
-   inside a `/data/prod` folder. 
-
-   ```
-   mkdir -p /data/prod
-   cd prod
-   git clone git@github.com:ijmarshall/robotreviewer.git
-   git clone git@github.com:ijmarshall/trialstreamer.git
-   git clone git@github.com:ijmarshall/trialstreamer-demo.git
-   git clone git@github.com:ijmarshall/trialstreamer-nginx.git
-   ```
-
-2. Update the submodule **ictrp-rerieval** repository at `/data/prod/trialstreamer/trialstreamer/ictrp-retrieval` by running: 
-    ```   
-    git submodule init  
-    git submodule update 
-    ```
 ### Requirements
 
 - [**Docker**](https://docs.docker.com/engine/install/ubuntu/) (_check installation with `docker info`_)  
@@ -45,9 +26,31 @@ This process has to be done only once:
   sudo echo "UUID=<disk's uuid> /data ext4 defaults,nofail 0 2" >> /etc/fstab
   ```
 - Create the pubmed updates folder with: `mkdir -p /data/pubmed-data/updates`
+- Create the production source code folder with: `mkdir -p /data/prod`
 
 Once the disk is mounted, if the space is not enough for creating all Docker images, and if it has not been done before,
 the Docker folder can be change to the storage disk following [these instructions](https://www.guguweb.com/2019/02/07/how-to-move-docker-data-directory-to-another-location-on-ubuntu/).
+
+
+### Cloning repositories 
+
+1. Clone the repositories **robotreviewer**, **trialstreamer**, **trialstreamer-demo** and **trialstreamer-nginx**
+   inside the `/data/prod` folder. 
+
+   ```
+   mkdir -p /data/prod
+   cd prod
+   git clone git@github.com:ijmarshall/robotreviewer.git
+   git clone git@github.com:ijmarshall/trialstreamer.git
+   git clone git@github.com:ijmarshall/trialstreamer-demo.git
+   git clone git@github.com:ijmarshall/trialstreamer-nginx.git
+   ```
+
+2. Update the submodule **ictrp-rerieval** repository at `/data/prod/trialstreamer/trialstreamer/ictrp-retrieval` by running: 
+    ```   
+    git submodule init  
+    git submodule update 
+    ```
 
 ### GPU support
 
@@ -88,7 +91,6 @@ To check that the drivers were successfully installed, you should be able to run
 
 2. API Key used by Trialstreamer must be set in the `config.json` file.
 
-3. Remove the exposed ports of `web` and `api`. In production these services are exposed by Nginx.
 
 ## Running services 
 
@@ -178,3 +180,18 @@ Run `docker ps` to check the services status.
 Run `docker stats` to check the memory and CPU usage of all services.
 
 The logs of any container can be followed running `docker logs  -f -t <container_name/container_id>`
+
+
+## Known Issues
+
+- Ocassionaly, apparently when executing long "update" jobs, the trialstreamer instance will crash.
+  Succesful status checks in AWS Cloudwatch for the instance will go from 1 to 0. The EC2 instance must be rebooted (i.e. from the EC2 Console) which will bring it back to life.
+  
+- Robotreviewer Demo web uses the same API as the Trialstreamer updates service.
+  This causes that annotations of uploaded PDFs time out when the update process is running.
+
+- Connections to SQLite databases are declared at module level. This made the process of cleaning uploaded PDFs to trigger fatal errors if the "VACUUM" command
+was run when other connections were still open. 
+  The usage of this command was removed, but the disk usage of the SQLite database at `robotreviewer/data/uploaded_pdfs/uploaded_pdfs.sqlite` 
+  could become relevant after too many PDFs are uploaded.
+
